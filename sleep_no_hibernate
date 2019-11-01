@@ -1,0 +1,64 @@
+@echo off
+::============================================================================
+:: This program has been made by Kl3m
+:: It helps user put the computer to sleep without hibernate
+:: with the choice of time unit and duration.
+::============================================================================
+
+:: Set the script in Unicode
+chcp 65001>nul
+
+:: Resize the prompt window. "cols" = nb of ASCII char on one line, "lines" = nb of lines
+mode con:cols=100 lines=10
+
+:: Choice cancelation goes back here
+:annuler
+
+:: Setting variables
+set txt1=""
+set /a tmp=0
+
+:: Intro text for users
+echo You wish to put your computer to sleep. If that is not the case, enter a.
+echo In order to help you achieve your goal, please select a unit of time : 
+echo h for hours, m for minutes, s for seconds (a to exit the program)
+
+:: Highlighted user input section
+set /p txt1=[7m"Please, type your choice then press enter : "[0m
+
+:: Treatment of answer
+IF /i "%txt1%"=="a" goto sortie
+IF /i "%txt1%"=="h" goto heures
+IF /i "%txt1%"=="m" goto minutes
+IF /i "%txt1%"=="s" goto secondes
+
+:: In hours, the value is multiplied b 3600
+:heures
+echo In how many hours do you wish to put your computer to sleep? (Enter 0 to cancel your choice) :
+set /p txt1=[7m"Please, type your choice then press enter : "[0m
+IF /i "%tmp%"=="0" goto annuler
+set /a dur=tmp*3600
+echo Leave the window alone. At the end of the timer, your computer will go to sleep.
+timeout /t %dur%&&rundll32.exe powrprof.dll,SetSuspendState Sleep
+
+:: In minutes, the value is multiplied by 60
+:minutes
+echo In how many minutes do you wish to put your computer to sleep? (Enter 0 to cancel your choice) :
+set /p txt1=[7m"Please, type your choice then press enter : "[0m
+IF /i "%tmp%"=="0" goto annuler
+set /a dur=tmp*60
+echo Leave the window alone. At the end of the timer, your computer will go to sleep.
+timeout /t %dur%&&rundll32.exe powrprof.dll,SetSuspendState Sleep
+
+:: Default unit
+:secondes
+echo In how many seconds do you wish to put your computer to sleep? (Enter 0 to cancel your choice) :
+set /p txt1=[7m"Please, type your choice then press enter : "[0m
+IF /i "%tmp%"=="0" goto annuler
+set /a dur=tmp
+echo Leave the window alone. At the end of the timer, your computer will go to sleep.
+timeout /t %dur%&&rundll32.exe powrprof.dll,SetSuspendState Sleep
+
+:: Exit the program here
+:sortie
+pause
